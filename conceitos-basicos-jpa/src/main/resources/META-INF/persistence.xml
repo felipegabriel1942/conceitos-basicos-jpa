@@ -8,6 +8,8 @@
 		transaction-type="RESOURCE_LOCAL">
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 		<class>br.com.bean.Grupo</class>
+		<class>br.com.bean.Setor</class>
+		<class>br.com.bean.Funcionario</class>
 		
 
 		<properties>

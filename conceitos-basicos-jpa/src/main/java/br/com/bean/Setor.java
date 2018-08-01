@@ -15,27 +15,26 @@ import javax.validation.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Length;
 
 @Entity
-@Table(name = "GRUPO", indexes = { @Index(columnList = "NOME") })
-public class Grupo implements Serializable {
+@Table(name = "SETOR", indexes = { @Index(name = "IDX_SETOR_NOME", columnList = "NOME") })
+public class Setor implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@Column(name = "ID")
-	@SequenceGenerator(name = "SEQ_GRUPO", sequenceName = "SEQ_GRUPO_ID", allocationSize = 1)
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_GRUPO")
+	@SequenceGenerator(name = "SEQ_SETOR", sequenceName = "SEQ_SETOR_ID", allocationSize = 1)
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQ_SETOR")
 	private Integer id;
 
-	@NotEmpty(message = "O nome não pode ser nulo")
+	@NotEmpty(message = "O nome deve ser informado")
 	@Length(max = 50, message = "O nome não pode ultrapassar {max} caracteres")
 	@Column(name = "NOME", length = 50, nullable = false)
 	private String nome;
 
-	public Grupo() {
+	public Setor() {
 
 	}
 
-	// Getters e Setters
 	public Integer getId() {
 		return id;
 	}
@@ -52,8 +51,6 @@ public class Grupo implements Serializable {
 		this.nome = nome;
 	}
 
-	// HashCode e Equals
-	// Utilizado para comparação de objetos
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -70,7 +67,7 @@ public class Grupo implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Grupo other = (Grupo) obj;
+		Setor other = (Setor) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -79,9 +76,6 @@ public class Grupo implements Serializable {
 		return true;
 	}
 
-	@Override
-	public String toString() {
-		return "Grupo [id=" + id + ", nome=" + nome + "]";
-	}
+	
 
 }
