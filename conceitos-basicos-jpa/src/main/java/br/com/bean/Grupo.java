@@ -81,7 +81,7 @@ public class Grupo implements Serializable {
 
 	@Override
 	public String toString() {
-		return "Grupo [id=" + id + ", nome=" + nome + "]";
+		return this.nome;
 	}
 
 }

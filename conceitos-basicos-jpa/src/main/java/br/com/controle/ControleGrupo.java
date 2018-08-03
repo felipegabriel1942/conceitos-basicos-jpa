@@ -1,9 +1,12 @@
 package br.com.controle;
 
+
+
+
 import java.io.Serializable;
 
-import javax.enterprise.context.SessionScoped;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 
 import br.com.bean.Grupo;
 import br.com.modelo.GrupoDAO;
@@ -52,6 +55,7 @@ public class ControleGrupo implements Serializable{
 		return "listar";
 	}
 	
+		
 	public GrupoDAO getDao() {
 		return dao;
 	}

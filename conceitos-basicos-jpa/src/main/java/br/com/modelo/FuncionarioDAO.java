@@ -5,30 +5,31 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import br.com.bean.Funcionario;
 import br.com.bean.Grupo;
 import br.com.util.EntityManagerUtil;
 import br.com.util.UtilErros;
 import br.com.util.UtilMensagens;
 
-public class GrupoDAO{
+public class FuncionarioDAO{
 
 	
 	
 	private EntityManager em;
 	
 	//Esse construtor inicia a conexão com o banco ao instanciar a classe
-	public GrupoDAO() {
+	public FuncionarioDAO() {
 		em = EntityManagerUtil.geEntityManager();
 	}
 
 
 	@SuppressWarnings("unchecked")
-	public List<Grupo> listarTodos() {
-		return em.createQuery("from Grupo order by nome").getResultList();
+	public List<Funcionario> listarTodos() {
+		return em.createQuery("from Funcionario order by nome").getResultList();
 	}
 	
 	//Salvar
-	public boolean gravar(Grupo obj) {
+	public boolean gravar(Funcionario obj) {
 		try {
 			em.getTransaction().begin();
 			if (obj.getId() == null) {
@@ -38,38 +39,38 @@ public class GrupoDAO{
 			}
 
 			em.getTransaction().commit();
-			UtilMensagens.mensagemInformacao("Grupo cadastrado com sucesso!");
+			UtilMensagens.mensagemInformacao("Funcionario cadastrado com sucesso!");
 			return true;
 		} catch (Exception e) {
 			if (em.getTransaction().isActive() == false) {
 				em.getTransaction().begin();
 			}
 			em.getTransaction().rollback();
-			UtilMensagens.mensagemErro("Erro ao cadastrar grupo: " + UtilErros.getMensagemErro(e));
+			UtilMensagens.mensagemErro("Erro ao cadastrar funcionario: " + UtilErros.getMensagemErro(e));
 			return false;
 		}
 	}
 	
 	//Excluir
-	public boolean excluir(Grupo obj) {
+	public boolean excluir(Funcionario obj) {
 		try {
 			em.getTransaction().begin();
 			em.remove(obj);
 			em.getTransaction().commit();
-			UtilMensagens.mensagemInformacao("Grupo removido com sucesso!");
+			UtilMensagens.mensagemInformacao("Funcionario removido com sucesso!");
 			return true;
 		} catch (Exception e) {
 			if (em.getTransaction().isActive() == false) {
 				em.getTransaction().begin();
 			}
 			em.getTransaction().rollback();
-			UtilMensagens.mensagemErro("Erro ao remover grupo: " + UtilErros.getMensagemErro(e));
+			UtilMensagens.mensagemErro("Erro ao remover funcionario: " + UtilErros.getMensagemErro(e));
 			return false;
 		}
 	}
 	
-	public Grupo localizar(Integer id) {
-		return em.find(Grupo.class, id);
+	public Funcionario localizar(Integer id) {
+		return em.find(Funcionario.class, id);
 	}
 	
 	

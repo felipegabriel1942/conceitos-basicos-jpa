@@ -5,15 +5,19 @@
 	xmlns:f="http://java.sun.com/jsf/core">
 <h:head>
 	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
-	<title>Listagem de Grupos</title>
+	<title>Listagem de funcionarios</title>
 
 </h:head>
 <h:body>
 	<h:form>
 		<h:messages />
-		<h:commandLink value="Novo Registro" action="#{controleGrupo.novo()}" />
-		<h:dataTable value="#{controleGrupo.dao.listarTodos()}" var="obj"
-			frame="box" rules="all" cellpadding="3">
+		<h:dataTable value="#{controleFuncionario.dao.listarTodos()}"
+			var="obj" frame="box" rules="all" cellpadding="3">
+			<f:facet name="header">
+				<h:commandButton value="Novo Registro"
+					action="#{controleFuncionario.novo}" />
+			</f:facet>
+
 			<h:column>
 				<f:facet name="header">ID</f:facet>
 				#{obj.id}
@@ -25,19 +29,28 @@
 			</h:column>
 
 			<h:column>
+				<f:facet name="header">Grupo</f:facet>
+				#{obj.grupo.nome}
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">Setor</f:facet>
+				#{obj.setor.nome}
+			</h:column>
+
+			<h:column>
 				<f:facet name="header">Alterar</f:facet>
 				<h:commandLink value="Alterar"
-					action="#{controleGrupo.alterar(obj)}" />
+					action="#{controleFuncionario.alterar(obj)}" />
 			</h:column>
 
 			<h:column>
 				<f:facet name="header">Excluir</f:facet>
 				<h:commandLink value="Excluir"
-					action="#{controleGrupo.excluir(obj)}"
-					onclick="if (!confirm('Confirma a exclusão do grupo?')) return false" />
+					action="#{controleFuncionario.excluir(obj)}"
+					onclick="if (!confirm('Confirma a exclusão do funcionario?')) return false" />
 			</h:column>
 		</h:dataTable>
 	</h:form>
-
 </h:body>
 </html>
