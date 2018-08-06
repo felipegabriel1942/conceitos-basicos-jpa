@@ -1,4 +1,4 @@
-package br.com.conversores;
+package br.com.modelo;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import br.com.modelo.Ordem;
+import br.com.conversores.ConverterOrdem;
 import br.com.util.UtilErros;
 import br.com.util.UtilMensagens;
 
@@ -54,13 +54,13 @@ public class GenericDAO<T> implements Serializable {
 			return false;
 		}
 	}
-	
+
 	public boolean merge(T objeto) {
 		try {
 			iniciarTransacao();
-			em.persist(objeto);
+			em.merge(objeto);
 			commitTransacao();
-			UtilMensagens.mensagemInformacao("Objeto persistido com sucesso");
+			UtilMensagens.mensagemInformacao("Objeto atualizado com sucesso");
 			return true;
 		} catch (Exception e) {
 			rollbackTransacao();
@@ -68,7 +68,7 @@ public class GenericDAO<T> implements Serializable {
 			return false;
 		}
 	}
-	
+
 	public boolean remove(T objeto) {
 		try {
 			iniciarTransacao();
@@ -82,9 +82,88 @@ public class GenericDAO<T> implements Serializable {
 			return false;
 		}
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<T> listarTodos() {
+		String jpql = "from " + classe.getSimpleName();
+		if (ordemAtual != null) {
+			jpql += " order by " + ordemAtual.getAtributo();
+		}
+
+		return em.createQuery(jpql).getResultList();
+	}
+
+	// Metodo para evitar SQL injection
+	public String protegeFiltro(String filtro) {
+		filtro = filtro.replaceAll("[';-]", "");
+		return filtro;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<T> listar() {
+		String jpql = "from " + classe.getSimpleName();
+		String where = "";
+		if (filtro != null && filtro.length() > 0) {
+			filtro = protegeFiltro(filtro);
+			if (ordemAtual.getAtributo().equals("id")) {
+				try {
+					Integer.parseInt(filtro);
+					where = " where " + ordemAtual.getAtributo() + " = '" + filtro + "'";
+				} catch (Exception e) {
+
+				}
+			} else {
+				where = " where upper(" + ordemAtual.getAtributo() + ") like '" + filtro.toUpperCase() + "%'";
+			}
+		}
+
+		jpql += where;
+		if (ordemAtual != null) {
+			jpql += " order by " + ordemAtual.getAtributo();
+		}
+		
+		//createNativeQuery -> uma forma de usar scripts SQL no JPA
+		totalObjetos = em.createNativeQuery("select id from " + classe.getSimpleName()).getResultList().size();
+		if (maximoObjetos == 0) {
+			maximoObjetos = totalObjetos;
+		}
+
+		return em.createQuery(jpql).setMaxResults(maximoObjetos).setFirstResult(posicao).getResultList();
+	}
 	
-	public List<T> listarTodos(){
-		return em.createQuery("from " + classe.getSimpleName() + " order by " + )
+	
+	public void primeiro() {
+		posicao = 0;
+	}
+	
+	public void anterior() {
+		posicao -= maximoObjetos;
+		if(posicao < 0) {
+			posicao = 0;
+		}
+	}
+	
+	public void proximo() {
+		if(posicao + maximoObjetos < totalObjetos) {
+			posicao += maximoObjetos;
+		}
+	}
+	
+	public void ultimo() {
+		int resto = totalObjetos % maximoObjetos;
+		if(resto > 0) {
+			posicao = totalObjetos - resto;
+		} else {
+			posicao = totalObjetos - maximoObjetos;
+		}
+	}
+	
+	public String getMensagemNavegacao() {
+		int ate = posicao + maximoObjetos;
+		if (ate > totalObjetos) {
+			ate = totalObjetos;
+		}
+		return "Listando de " + (posicao + 1) + " até " + ate + " de " + totalObjetos + " registros";
 	}
 
 	public Class getClasse() {
