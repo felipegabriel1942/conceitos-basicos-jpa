@@ -6,10 +6,12 @@ package br.com.controle;
 import java.io.Serializable;
 
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.SessionScoped;
 
 import br.com.bean.Grupo;
 import br.com.modelo.GrupoDAO;
+import br.com.util.UtilMensagens;
 
 @ManagedBean(name="controleGrupo")
 @SessionScoped
@@ -19,6 +21,8 @@ public class ControleGrupo implements Serializable{
 	
 	private GrupoDAO dao;
 	private Grupo obj;
+	@ManagedProperty(value="#{controleLogin}")
+	private ControleLogin controleLogin;
 	
 	public ControleGrupo() {
 		dao = new GrupoDAO();
@@ -51,7 +55,11 @@ public class ControleGrupo implements Serializable{
 	}
 	
 	public String excluir(Grupo grupo) {
-		dao.excluir(grupo);
+		if(controleLogin.getUsuarioLogado().getGrupo().getNome().equals("Administrador")) {
+			dao.excluir(grupo);
+		} else {
+			UtilMensagens.mensagemErro("Usuario não tem autorização para exclusão!");
+		}		
 		return "listar";
 	}
 	
