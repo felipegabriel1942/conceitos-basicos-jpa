@@ -54,6 +54,11 @@ public class ControleSetor implements Serializable {
 		}
 	}
 	
+	public String alterar(Setor obj) {
+		objeto = obj;
+		return "form";
+	}
+	
 	public String excluir(Setor obj) {
 		dao.remove(obj);
 		return "listar";
