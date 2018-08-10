@@ -76,6 +76,16 @@ public class ControleGrupo implements Serializable{
 	public void setObj(Grupo obj) {
 		this.obj = obj;
 	}
+
+	public ControleLogin getControleLogin() {
+		return controleLogin;
+	}
+
+	public void setControleLogin(ControleLogin controleLogin) {
+		this.controleLogin = controleLogin;
+	}
+	
+	
 	
 	
 
